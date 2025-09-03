@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Create Account - Task Manager</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        :root {
+            --primary-color: #3f51b5;
+            --secondary-color: #f5f7f9;
+            --accent-green: #4caf50;
+            --text-color-dark: #212121;
+            --text-color-light: #fff;
+            --border-radius-md: 8px;
+            --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.1);
+            --transition-speed: 0.2s ease-in-out;
+        }
+
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: 'Roboto', sans-serif;
+            background-color: var(--secondary-color);
+            color: var(--text-color-dark);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .container {
+            background: #fff;
+            padding: 40px;
+            border-radius: var(--border-radius-md);
+            text-align: center;
+            width: 360px;
+            max-width: 90%;
+            box-shadow: var(--shadow-md);
+            animation: fadeIn 0.5s ease-out;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        h1 {
+            margin-bottom: 30px;
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--primary-color);
+        }
+
+        form {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+        
+        input[type="text"],
+        input[type="password"] {
+            width: calc(100% - 24px);
+            padding: 12px;
+            border: 1px solid #e0e0e0;
+            border-radius: 4px;
+            font-size: 1rem;
+            color: var(--text-color-dark);
+            transition: border-color var(--transition-speed);
+            outline: none;
+        }
+        input[type="text"]:focus,
+        input[type="password"]:focus {
+            border-color: var(--primary-color);
+        }
+
+        button {
+            width: 100%;
+            padding: 14px;
+            background: var(--primary-color);
+            border: none;
+            border-radius: 4px;
+            color: var(--text-color-light);
+            font-size: 1.1rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: background-color var(--transition-speed);
+        }
+        button:hover {
+            background: #303f9f;
+        }
+
+        .error {
+            color: #d32f2f; /* A darker, more professional red */
+            font-size: 0.9rem;
+            margin-top: -5px;
+            margin-bottom: 10px;
+            display: none;
+            animation: shake 0.5s ease-in-out;
+        }
+
+        .error.show {
+            display: block;
+        }
+
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            20%, 60% { transform: translateX(-5px); }
+            40%, 80% { transform: translateX(5px); }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Create Account</h1>
+        <form id="signupForm" action="/register" method="POST" onsubmit="return validatePasswords()">
+            <input type="text" name="username" placeholder="Enter your name" required autocomplete="off">
+            <input type="password" id="password" name="password" placeholder="Enter password (8 characters)" maxlength="8" required autocomplete="new-password">
+            <input type="password" id="confirmPassword" placeholder="Confirm password (8 characters)" maxlength="8" required autocomplete="new-password">
+            <div class="error" id="errorMessage"></div>
+            <button type="submit">Create Account</button>
+        </form>
+    </div>
+
+    <script>
+        function validatePasswords() {
+            const password = document.getElementById('password').value;
+            const confirmPassword = document.getElementById('confirmPassword').value;
+            const errorMessage = document.getElementById('errorMessage');
+
+            errorMessage.textContent = "";
+            errorMessage.classList.remove('show');
+
+            if (password.length !== 8) {
+                errorMessage.textContent = "Password must be exactly 8 characters.";
+                errorMessage.classList.add('show');
+                return false;
+            }
+            if (password !== confirmPassword) {
+                errorMessage.textContent = "Passwords do not match.";
+                errorMessage.classList.add('show');
+                return false;
+            }
+
+            return true;
+        }
+    </script>
+</body>
+</html>

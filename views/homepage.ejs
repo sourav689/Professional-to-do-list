@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - Task Manager</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        :root {
+            --primary-color: #3f51b5; /* Professional blue */
+            --secondary-color: #f5f7f9; /* Off-white background */
+            --accent-green: #4caf50;
+            --text-color-dark: #212121;
+            --text-color-light: #fff;
+            --border-radius-md: 8px;
+            --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.1);
+            --transition-speed: 0.2s ease-in-out;
+        }
+
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: 'Roboto', sans-serif;
+            background-color: var(--secondary-color);
+            color: var(--text-color-dark);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .container {
+            background: #fff;
+            padding: 40px;
+            border-radius: var(--border-radius-md);
+            text-align: center;
+            width: 360px;
+            box-shadow: var(--shadow-md);
+            animation: fadeIn 0.5s ease-out;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        h1 {
+            margin-bottom: 30px;
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--primary-color);
+        }
+
+        form {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        input[type="text"],
+        input[type="password"] {
+            width: calc(100% - 24px);
+            padding: 12px;
+            border: 1px solid #e0e0e0;
+            border-radius: 4px;
+            font-size: 1rem;
+            color: var(--text-color-dark);
+            transition: border-color var(--transition-speed);
+            outline: none;
+        }
+        input[type="text"]:focus,
+        input[type="password"]:focus {
+            border-color: var(--primary-color);
+        }
+
+        button {
+            width: 100%;
+            padding: 14px;
+            background: var(--primary-color);
+            border: none;
+            border-radius: 4px;
+            color: var(--text-color-light);
+            font-size: 1.1rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: background-color var(--transition-speed);
+        }
+        button:hover {
+            background: #303f9f;
+        }
+
+        .create-account {
+            margin-top: 20px;
+            display: block;
+            color: #666;
+            text-decoration: none;
+            font-size: 0.9rem;
+            transition: color var(--transition-speed);
+        }
+        .create-account:hover {
+            color: var(--primary-color);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Login</h1>
+        <form action="/login" method="POST">
+            <input type="text" name="username" placeholder="Username" required>
+            <input type="password" name="password" placeholder="Password" required>
+            <button type="submit">Log In</button>
+        </form>
+        <a href="/create-account" class="create-account">Don't have an account? Sign Up</a>
+    </div>
+</body>
+</html>

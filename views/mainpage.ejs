@@ -1,0 +1,405 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Professional Task Manager</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        :root {
+            --primary-color: #3f51b5;
+            --secondary-color: #f5f7f9;
+            --accent-green: #4caf50;
+            --accent-blue: #2196f3;
+            --accent-red: #f44336;
+            --accent-gray: #9e9e9e;
+            --text-color-dark: #212121;
+            --text-color-light: #fff;
+            --border-radius-sm: 4px;
+            --border-radius-md: 8px;
+            --shadow-light: 0 2px 4px rgba(0, 0, 0, 0.08);
+            --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.1);
+            --transition-speed: 0.2s ease-in-out;
+        }
+
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: 'Roboto', sans-serif;
+            background-color: var(--secondary-color);
+            color: var(--text-color-dark);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            position: relative; /* Essential for positioning the logout button */
+        }
+
+        .app-container {
+            width: 100%;
+            max-width: 800px;
+            padding: 40px;
+            box-sizing: border-box;
+            background: #fff;
+            box-shadow: var(--shadow-md);
+            border-radius: var(--border-radius-md);
+            margin: 40px 0;
+        }
+
+        h1 {
+            text-align: left;
+            font-size: 2rem;
+            margin-bottom: 10px;
+            font-weight: 700;
+            color: var(--primary-color);
+        }
+
+        .welcome-message {
+            text-align: left;
+            font-size: 1rem;
+            margin-bottom: 30px;
+            color: #666;
+            font-weight: 400;
+        }
+
+        .task-input {
+            display: flex;
+            margin-bottom: 25px;
+            gap: 10px;
+        }
+
+        .task-input input[type="text"] {
+            flex: 1;
+            padding: 12px;
+            border: 1px solid #e0e0e0;
+            border-radius: var(--border-radius-sm);
+            font-size: 1rem;
+            color: var(--text-color-dark);
+            transition: border-color var(--transition-speed);
+            outline: none;
+        }
+        .task-input input[type="text"]:focus {
+            border-color: var(--primary-color);
+        }
+
+        .btn {
+            padding: 12px 20px;
+            border: none;
+            border-radius: var(--border-radius-sm);
+            color: var(--text-color-light);
+            font-weight: 500;
+            cursor: pointer;
+            transition: background-color var(--transition-speed);
+            font-size: 1rem;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+        .btn:hover {
+            opacity: 0.9;
+        }
+
+        .btn-add { background-color: var(--primary-color); }
+        .btn-add:hover { background-color: #303f9f; }
+
+        .btn-update { background-color: var(--accent-blue); }
+        .btn-update:hover { background-color: #1976d2; }
+
+        .btn-complete { background-color: var(--accent-green); }
+        .btn-complete:hover { background-color: #388e3c; }
+        .btn-complete.undo { background-color: var(--accent-gray); }
+        .btn-complete.undo:hover { background-color: #757575; }
+
+        .btn-delete { background-color: var(--accent-red); }
+        .btn-delete:hover { background-color: #d32f2f; }
+
+        .btn-cancel { background-color: #bdbdbd; }
+        .btn-cancel:hover { background-color: #9e9e9e; }
+
+        .btn-logout {
+            background-color: #616161; /* A neutral dark gray */
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            padding: 10px 16px;
+            box-shadow: var(--shadow-light);
+            z-index: 10;
+        }
+        .btn-logout:hover {
+            background-color: #424242;
+        }
+
+        ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        li {
+            background-color: #fff;
+            margin-bottom: 12px;
+            padding: 16px 20px;
+            border-radius: var(--border-radius-md);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 1rem;
+            border: 1px solid #e0e0e0;
+            transition: transform var(--transition-speed), box-shadow var(--transition-speed);
+        }
+        li:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-light);
+        }
+
+        li.completed {
+            text-decoration: line-through;
+            color: #999;
+            background-color: #fafafa;
+        }
+
+        span.task-text {
+            flex-grow: 1;
+            padding-right: 15px;
+        }
+
+        .task-actions {
+            display: flex;
+            gap: 8px;
+        }
+
+        .task-actions button {
+            padding: 8px 12px;
+            font-size: 0.9rem;
+            border-radius: var(--border-radius-sm);
+        }
+
+        .edit-task-form {
+            display: none;
+            width: 100%;
+            margin-top: 10px;
+            gap: 8px;
+        }
+        .edit-task-form.active {
+            display: flex;
+        }
+
+        .edit-task-form input[type="text"] {
+            flex: 1;
+            padding: 10px;
+            border: 1px solid #e0e0e0;
+            border-radius: var(--border-radius-sm);
+            font-size: 0.95rem;
+            outline: none;
+        }
+        .edit-task-form input[type="text"]:focus {
+            border-color: var(--primary-color);
+        }
+
+        .edit-task-form .btn {
+            padding: 10px;
+            font-size: 0.9rem;
+        }
+
+        .no-tasks {
+            text-align: center;
+            font-size: 1.1rem;
+            margin-top: 20px;
+            color: #888;
+            padding: 20px;
+            border: 1px dashed #ccc;
+            border-radius: var(--border-radius-md);
+        }
+
+        /* Full-screen Celebration Overlay */
+        .celebration {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.85);
+            color: #fff;
+            z-index: 9999;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            transition: opacity 0.5s ease-in-out;
+            opacity: 0;
+        }
+
+        .celebration.show {
+            display: flex;
+            opacity: 1;
+        }
+
+        .celebration-content {
+            background: #fff;
+            padding: 40px;
+            border-radius: 12px;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .celebration-content img {
+            max-width: 250px;
+            height: auto;
+            margin-bottom: 20px;
+        }
+
+        .celebration-content h2 {
+            font-size: 2.5rem;
+            margin: 0;
+            font-weight: 700;
+            color: var(--primary-color);
+        }
+
+        .celebration-content p {
+            font-size: 1.2rem;
+            margin: 10px 0 0;
+            font-weight: 400;
+            color: #666;
+        }
+
+        /* Responsive adjustments */
+        @media (max-width: 600px) {
+            .app-container {
+                padding: 20px;
+                margin: 20px;
+            }
+            h1 {
+                font-size: 1.8rem;
+            }
+            .task-input {
+                flex-direction: column;
+            }
+            .task-actions {
+                flex-wrap: wrap;
+                justify-content: flex-end;
+            }
+            li {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 10px;
+            }
+            .edit-task-form.active {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+    <form action="/" method="GET">
+        <button type="submit" class="btn btn-logout"><i class="fas fa-sign-out-alt"></i> Log Out</button>
+    </form>
+
+    <div class="app-container">
+        <h1>Task List</h1>
+        <p class="welcome-message">Hello, <%= username %>! What will you accomplish today?</p>
+
+        <div class="task-input">
+            <form action="/add-task" method="POST" style="display:flex; width:100%; gap: 10px;">
+                <input type="hidden" name="username" value="<%= username %>">
+                <input type="text" name="task" placeholder="Add a new task..." required>
+                <button type="submit" class="btn btn-add"><i class="fas fa-plus"></i> Add</button>
+            </form>
+        </div>
+
+        <% if (!tasks || tasks.length === 0) { %>
+            <div class="no-tasks">You have no tasks. Time to add a new one!</div>
+        <% } else { %>
+            <ul>
+                <% tasks.forEach(function(task) { %>
+                    <li class="<%= task.completed ? 'completed' : '' %>" data-task-id="<%= task.task %>">
+                        <span class="task-text"><%= task.task %></span>
+                        
+                        <div class="task-actions">
+                            <button type="button" class="btn btn-update toggle-edit-form"><i class="fas fa-edit"></i> Edit</button>
+                            
+                            <form action="/complete-task" method="POST" style="display:inline;">
+                                <input type="hidden" name="username" value="<%= username %>">
+                                <input type="hidden" name="task" value="<%= task.task %>">
+                                <button type="submit" class="btn btn-complete <%= task.completed ? 'undo' : '' %>" title="<%= task.completed ? 'Mark as Incomplete' : 'Mark as Complete' %>">
+                                    <i class="fas fa-check"></i> <%= task.completed ? 'Undo' : 'Complete' %>
+                                </button>
+                            </form>
+                            
+                            <form action="/delete-task" method="POST" style="display:inline;">
+                                <input type="hidden" name="username" value="<%= username %>">
+                                <input type="hidden" name="task" value="<%= task.task %>">
+                                <button type="submit" class="btn btn-delete" title="Delete Task"><i class="fas fa-trash"></i> Delete</button>
+                            </form>
+                        </div>
+
+                        <form action="/edit-task" method="POST" class="edit-task-form">
+                            <input type="hidden" name="username" value="<%= username %>">
+                            <input type="hidden" name="oldTask" value="<%= task.task %>">
+                            <input type="text" name="newTask" value="<%= task.task %>" required>
+                            <button type="submit" class="btn btn-update"><i class="fas fa-save"></i> Save</button>
+                            <button type="button" class="btn btn-cancel cancel-edit"><i class="fas fa-times"></i> Cancel</button>
+                        </form>
+                    </li>
+                <% }) %>
+            </ul>
+        <% } %>
+
+    </div>
+
+    <div class="celebration" id="celebration">
+        <div class="celebration-content">
+            <img src="/celebration.gif" alt="Celebration">
+            <h2>Task Completed!</h2>
+            <p>Great job! You're one step closer to your goal.</p>
+        </div>
+    </div>
+
+    <script>
+        // Edit Task Toggle Functionality
+        document.querySelectorAll('.toggle-edit-form').forEach(button => {
+            button.addEventListener('click', (event) => {
+                const listItem = event.target.closest('li');
+                const taskTextSpan = listItem.querySelector('.task-text');
+                const taskActionsDiv = listItem.querySelector('.task-actions');
+                const editForm = listItem.querySelector('.edit-task-form');
+                const editInput = editForm.querySelector('input[name="newTask"]');
+
+                taskTextSpan.style.display = 'none';
+                taskActionsDiv.style.display = 'none';
+
+                editForm.classList.add('active');
+                editInput.focus();
+            });
+        });
+
+        document.querySelectorAll('.cancel-edit').forEach(button => {
+            button.addEventListener('click', (event) => {
+                const listItem = event.target.closest('li');
+                const taskTextSpan = listItem.querySelector('.task-text');
+                const taskActionsDiv = listItem.querySelector('.task-actions');
+                const editForm = listItem.querySelector('.edit-task-form');
+
+                taskTextSpan.style.display = 'block';
+                taskActionsDiv.style.display = 'flex';
+                
+                editForm.classList.remove('active');
+            });
+        });
+
+        // Celebration animation handling
+        const celebrationDiv = document.getElementById('celebration');
+        const shouldCelebrate = <%= typeof celebrate !== 'undefined' && celebrate ? 'true' : 'false' %>;
+
+        if (shouldCelebrate) {
+            celebrationDiv.classList.add('show');
+            setTimeout(() => {
+                celebrationDiv.classList.remove('show');
+            }, 3000); // Display for 3 seconds
+        }
+    </script>
+</body>
+</html>
